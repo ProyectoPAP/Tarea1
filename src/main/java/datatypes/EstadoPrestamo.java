@@ -1,5 +1,7 @@
 package datatypes;
 
 public enum EstadoPrestamo {
-	Pendiente, En_Curso, Devuelto
+    PENDIENTE,
+    EN_CURSO,
+    DEVUELTO    
 }
