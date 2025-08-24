@@ -1,5 +1,7 @@
 package datatypes;
 
+import java.util.Date;
+
 public class DtPrestamo {
     private Date fechaSolicitud;
     private Date fechaDevolucion;
