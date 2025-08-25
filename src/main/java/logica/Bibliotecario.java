@@ -6,7 +6,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import java.util.List;
 import java.util.ArrayList;
-import logica.Prestamo;
 
 @Entity
 @DiscriminatorValue("B")

@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.IdClass;
 import java.util.Date;
 import persistencia.PrestamoID;
+import datatypes.EstadoPrestamo;
 
 @Entity
 @IdClass(PrestamoID.class)
@@ -34,7 +35,7 @@ public class Prestamo {
     
     private Date fechaSolicitud;
     private Date fechaDevolucion;
-    private String estado;
+    private EstadoPrestamo estado;
     
     public Prestamo() {
         // Default constructor for JPA
@@ -42,7 +43,7 @@ public class Prestamo {
     
     public Prestamo(String idMaterial, String nombreLector, String idBibliotecario, 
                    Lector lector, Material material, Bibliotecario bibliotecario, 
-                   Date fechaSolicitud, Date fechaDevolucion, String estado) {
+                   Date fechaSolicitud, Date fechaDevolucion, EstadoPrestamo estado) {
         this.idMaterial = idMaterial;
         this.nombreLector = nombreLector;
         this.idBibliotecario = idBibliotecario;
@@ -83,7 +84,7 @@ public class Prestamo {
         return lector;
     }
     
-    public void setLector(Lector lector) {
+        public void setLector(Lector lector) {  
         this.lector = lector;
     }
     
@@ -119,11 +120,11 @@ public class Prestamo {
         this.fechaDevolucion = fechaDevolucion;
     }
     
-    public String getEstado() {
+    public EstadoPrestamo getEstado() {
         return estado;
     }
     
-    public void setEstado(String estado) {
+    public void setEstado(EstadoPrestamo estado) {
         this.estado = estado;
     }
     
