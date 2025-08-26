@@ -1,0 +1,64 @@
+# Archivos de Eclipse
+src/.classpath
+src/.project
+src/.settings/
+
+# Archivos de Gradle
+src/.gradle/
+src/build/
+src/gradle/
+src/gradlew
+src/gradlew.bat
+
+# Archivos de Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Archivos compilados Java
+*.class
+**/*.class
+
+# Archivos de IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+*~
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales
+*.tmp
+*.temp
+*.bak
+
+# Archivos de configuración local
+application.properties
+application.yml
+application-local.properties
+application-local.yml
+
+# Archivos de base de datos
+*.db
+*.sqlite
+*.h2.db
+
+# Archivos de persistencia JPA
+persistence.xml
