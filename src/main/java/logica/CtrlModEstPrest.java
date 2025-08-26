@@ -1,0 +1,24 @@
+package logica;
+
+import datatypes.DtLector;
+import datatypes.DtPrestamo;
+import datatypes.EstadoPrestamo;
+
+public class CtrlModEstPrest {
+    private static CtrlModEstPrest instancia = null;
+
+    private CtrlModEstPrest(){}
+
+    public static CtrlModEstPrest getInstancia(){
+        if(instancia == null){
+            instancia = new CtrlModEstPrest();
+        }
+        return instancia;
+    }
+
+    public void modificarEstadoPrestamo(DtPrestamo prestamo, EstadoPrestamo estado){
+        Prestamo prestamoModificar = ManejadorPrestamos.getInstancia().buscarPrestamo(prestamo.getIdMaterial(), prestamo.getNombreLector(), prestamo.getIdBibliotecario());
+        prestamoModificar.setEstado(estado);
+        ManejadorPrestamos.getInstancia().actualizarPrestamo(prestamoModificar);
+    }
+}
