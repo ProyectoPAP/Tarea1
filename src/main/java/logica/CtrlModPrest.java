@@ -1,20 +1,12 @@
 package logica;
 
 import datatypes.DtPrestamo;
+import datatypes.DtLector;
+import interfaces.ICtrlModPrest;
 
-public class CtrlModPrest {
-    private static CtrlModPrest instancia = null;
+public class CtrlModPrest implements ICtrlModPrest {;
 
-    private CtrlModPrest(){}
-
-    public static CtrlModPrest getInstancia(){
-        if(instancia == null){
-            instancia = new CtrlModPrest();
-        }
-        return instancia;
-    }
-
-    public void modificarPrestamo(DtPrestamo prestamoAModificar){
+    public void modificarPrestamo(DtLector lector, DtPrestamo prestamoAModificar){
         Prestamo prestamoModificar = ManejadorPrestamos.getInstancia().buscarPrestamo(prestamoAModificar.getIdMaterial(), prestamoAModificar.getNombreLector(), prestamoAModificar.getIdBibliotecario());
         ManejadorPrestamos.getInstancia().actualizarPrestamo(prestamoModificar);
     }

@@ -32,6 +32,7 @@ public class ManejadorUsuario {
         return Conexion.getInstancia().getEntityManager().find(Usuario.class, nombre);
     }
 
+
     public List<Usuario> obtenerUsuarios(){
         return Conexion.getInstancia().getEntityManager().createQuery("SELECT u FROM Usuario u", Usuario.class).getResultList();
     }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.ArrayList;
 import datatypes.EstadoLector;
 import datatypes.Zona;
-import logica.Prestamo;
+
 
 @Entity
 @DiscriminatorValue("L")

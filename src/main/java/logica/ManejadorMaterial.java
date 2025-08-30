@@ -1,5 +1,6 @@
 package logica;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import javax.persistence.EntityManager;
@@ -39,6 +40,14 @@ public class ManejadorMaterial {
     public List<Material> obtenerMateriales(){
         return Conexion.getInstancia().getEntityManager().createQuery("SELECT m FROM Material m", Material.class).getResultList();
     }
+
+    public List<Material> obtenerMaterialesEntreFechas(Date fechaInicio, Date fechaFin){
+        return Conexion.getInstancia().getEntityManager().createQuery("SELECT m FROM Material m WHERE m.fechaIngreso BETWEEN :fechaInicio AND :fechaFin", Material.class)
+        .setParameter("fechaInicio", fechaInicio)
+        .setParameter("fechaFin", fechaFin)
+        .getResultList();
+    }
+
 
     public ArrayList<DtMaterial> listarTopPrestados(){
         EntityManager em = Conexion.getInstancia().getEntityManager();
