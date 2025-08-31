@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import main.java.presentacion.MenuAltas;
+import main.java.presentacion.MenuBajas;
+import main.java.presentacion.MenuModificaciones;
+
 
 public class Principal {
     private JFrame frame;
@@ -128,67 +132,13 @@ public class Principal {
         
         menuItemAgregarLector.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JDialog userManagementDialog = new JDialog(frame, "Agregar Lector", false);
-                // Calcular el 80% del tamaño del frame principal
-                int frameWidth = (int) (frame.getWidth() * 0.8);
-                int frameHeight = (int) (frame.getHeight() * 0.8);
-                userManagementDialog.setSize(frameWidth, frameHeight);
-                // Centrar el frame con respecto al frame principal
-                int x = frame.getX() + (frame.getWidth() - frameWidth) / 2;
-                int y = frame.getY() + (frame.getHeight() - frameHeight) / 2;
-                userManagementDialog.setLocation(x, y);
-                userManagementDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                userManagementDialog.setAlwaysOnTop(true);
-                userManagementDialog.setModal(false);
-
-                JPanel panel = new JPanel();
-                panel.setLayout(new GridBagLayout());
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.insets = new Insets(10, 10, 10, 10);
-
-                JLabel lblTitulo = new JLabel("Formulario para Agregar Lector");
-                lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
-                
-                gbc.gridx = 0;
-                gbc.gridy = 0;
-                gbc.gridwidth = 2;
-                panel.add(lblTitulo, gbc);
-
-                userManagementDialog.add(panel);
-                userManagementDialog.setVisible(true);
+                MenuAltas.mostrarDialogoAgregarLector(frame);
             }
         });
         
         menuItemAgregarBibliotecario.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JDialog userManagementDialog = new JDialog(frame, "Agregar Bibliotecario", false);
-                // Calcular el 80% del tamaño del frame principal
-                int frameWidth = (int) (frame.getWidth() * 0.8);
-                int frameHeight = (int) (frame.getHeight() * 0.8);
-                userManagementDialog.setSize(frameWidth, frameHeight);
-                // Centrar el frame con respecto al frame principal
-                int x = frame.getX() + (frame.getWidth() - frameWidth) / 2;
-                int y = frame.getY() + (frame.getHeight() - frameHeight) / 2;
-                userManagementDialog.setLocation(x, y);
-                userManagementDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                userManagementDialog.setAlwaysOnTop(true);
-                userManagementDialog.setModal(false);
-
-                JPanel panel = new JPanel();
-                panel.setLayout(new GridBagLayout());
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.insets = new Insets(10, 10, 10, 10);
-
-                JLabel lblTitulo = new JLabel("Formulario para Agregar Bibliotecario");
-                lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
-                
-                gbc.gridx = 0;
-                gbc.gridy = 0;
-                gbc.gridwidth = 2;
-                panel.add(lblTitulo, gbc);
-
-                userManagementDialog.add(panel);
-                userManagementDialog.setVisible(true);
+                MenuAltas.mostrarDialogoAgregarBibliotecario(frame);
             }
         });
         
@@ -200,7 +150,7 @@ public class Principal {
         menuItemModificarZona = new JMenuItem("Modificar Zona");
         menuItemModificarZona.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Función de modificar zona");
+                MenuModificaciones.mostrarDialogoModificarZona(frame);
             }
         });
         menuModificarUsuario.add(menuItemModificarZona);
@@ -209,14 +159,14 @@ public class Principal {
         menuItemCambiarEstado = new JMenuItem("Cambiar Estado");
         menuItemCambiarEstado.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Función de cambiar estado");
+                MenuModificaciones.mostrarDialogoCambiarEstado(frame);
             }
         });
         menuModificarUsuario.add(menuItemCambiarEstado);
         
         menuItemEliminarUsuario.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Función de eliminar usuario");
+                MenuBajas.mostrarDialogoEliminarUsuario(frame);
             }
         });
         
@@ -241,7 +191,7 @@ public class Principal {
         
         menuItemAgregarPrestamo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Función de agregar préstamo");
+                MenuAltas.mostrarDialogoAgregarPrestamo(frame);
             }
         });
         
@@ -251,13 +201,13 @@ public class Principal {
         
         menuItemModificarEstado.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Función de modificar estado");
+                MenuModificaciones.mostrarDialogoModificarEstadoPrestamo(frame);
             }
         });
         
         menuItemModificarPrestamo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Función de modificar préstamo");
+                MenuModificaciones.mostrarDialogoModificarPrestamo(frame);
             }
         });
         
@@ -266,7 +216,7 @@ public class Principal {
         
         menuItemEliminarPrestamo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Función de eliminar préstamo");
+                MenuBajas.mostrarDialogoEliminarPrestamo(frame);
             }
         });
         
@@ -294,67 +244,13 @@ public class Principal {
         
         menuItemAgregarArticulo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JDialog materialDialog = new JDialog(frame, "Agregar Artículo", false);
-                // Calcular el 80% del tamaño del frame principal
-                int frameWidth = (int) (frame.getWidth() * 0.8);
-                int frameHeight = (int) (frame.getHeight() * 0.8);
-                materialDialog.setSize(frameWidth, frameHeight);
-                // Centrar el frame con respecto al frame principal
-                int x = frame.getX() + (frame.getWidth() - frameWidth) / 2;
-                int y = frame.getY() + (frame.getHeight() - frameHeight) / 2;
-                materialDialog.setLocation(x, y);
-                materialDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                materialDialog.setAlwaysOnTop(true);
-                materialDialog.setModal(false);
-
-                JPanel panel = new JPanel();
-                panel.setLayout(new GridBagLayout());
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.insets = new Insets(10, 10, 10, 10);
-
-                JLabel lblTitulo = new JLabel("Formulario para Agregar Artículo");
-                lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
-                
-                gbc.gridx = 0;
-                gbc.gridy = 0;
-                gbc.gridwidth = 2;
-                panel.add(lblTitulo, gbc);
-
-                materialDialog.add(panel);
-                materialDialog.setVisible(true);
+                MenuAltas.mostrarDialogoAgregarArticulo(frame);
             }
         });
         
         menuItemAgregarLibro.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JDialog materialDialog = new JDialog(frame, "Agregar Libro", false);
-                // Calcular el 80% del tamaño del frame principal
-                int frameWidth = (int) (frame.getWidth() * 0.8);
-                int frameHeight = (int) (frame.getHeight() * 0.8);
-                materialDialog.setSize(frameWidth, frameHeight);
-                // Centrar el frame con respecto al frame principal
-                int x = frame.getX() + (frame.getWidth() - frameWidth) / 2;
-                int y = frame.getY() + (frame.getHeight() - frameHeight) / 2;
-                materialDialog.setLocation(x, y);
-                materialDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-                materialDialog.setAlwaysOnTop(true);
-                materialDialog.setModal(false);
-
-                JPanel panel = new JPanel();
-                panel.setLayout(new GridBagLayout());
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.insets = new Insets(10, 10, 10, 10);
-
-                JLabel lblTitulo = new JLabel("Formulario para Agregar Libro");
-                lblTitulo.setFont(new Font("Arial", Font.BOLD, 16));
-                
-                gbc.gridx = 0;
-                gbc.gridy = 0;
-                gbc.gridwidth = 2;
-                panel.add(lblTitulo, gbc);
-
-                materialDialog.add(panel);
-                materialDialog.setVisible(true);
+                MenuAltas.mostrarDialogoAgregarLibro(frame);
             }
         });
         
@@ -364,7 +260,7 @@ public class Principal {
         
         menuItemEliminarMaterial.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "Función de eliminar material");
+                MenuBajas.mostrarDialogoEliminarMaterial(frame);
             }
         });
         
