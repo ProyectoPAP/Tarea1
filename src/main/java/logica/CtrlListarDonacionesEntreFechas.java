@@ -1,18 +1,17 @@
 package logica;
 
-import datatypes.DtMaterial;
-import interfaces.ICtrlListarDonaciones;
-
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import datatypes.DtMaterial;
+import interfaces.ICtrlListarDonacionesEntreFechas;
 
 
+public class CtrlListarDonacionesEntreFechas implements ICtrlListarDonacionesEntreFechas {
 
-public class CtrlListarDonaciones implements ICtrlListarDonaciones {
-    
-    public List<DtMaterial> listarDonaciones() {
+    public List<DtMaterial> listarDonacionesEntreFechas(Date fechaInicio, Date fechaFin) {
         ManejadorMaterial mM = ManejadorMaterial.getInstancia();
-        List<Material> materiales = mM.obtenerMateriales();
+        List<Material> materiales = mM.obtenerMaterialesEntreFechas(fechaInicio, fechaFin);
         List<DtMaterial> dtMateriales = new ArrayList<>();
         for (Material material : materiales) {
             dtMateriales.add(new DtMaterial(material.getId(), material.getFechaIngreso(), material.getTipo()));

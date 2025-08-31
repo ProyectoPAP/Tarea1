@@ -1,9 +1,9 @@
 package interfaces;
 
 
-import datatypes.DtLector;
 import datatypes.DtPrestamo;
+import datatypes.DtLector;
 
 public interface ICtrlModPrest {
-    public void modificarPrestamo(DtLector lector, DtPrestamo prestamoAModificar);
+    public void modificarPrestamo(DtLector lector ,DtPrestamo prestamoAModificar);
 }
