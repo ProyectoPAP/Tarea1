@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import main.java.presentacion.MenuAltas;
-import main.java.presentacion.MenuBajas;
-import main.java.presentacion.MenuModificaciones;
+import presentacion.MenuAltas;
+import presentacion.MenuBajas;
+import presentacion.MenuModificaciones;
 
 
 public class Principal {

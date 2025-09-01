@@ -20,6 +20,10 @@ public class ManejadorPrestamos {
         }
         return instancia;
     }
+    void altaPrestamo(DtPrestamo prestamo){
+        Prestamo p = new Prestamo(prestamo.getIdMaterial(), prestamo.getNombreLector(), prestamo.getIdBibliotecario(), prestamo.getFechaSolicitud(), prestamo.getFechaDevolucion(), prestamo.getEstado());
+        agregarPrestamo(p);
+    }
 
     public void agregarPrestamo(Prestamo prestamo){
         Conexion.getInstancia().getEntityManager().persist(prestamo);
@@ -71,6 +75,18 @@ public class ManejadorPrestamos {
             .setParameter("idBibliotecario", bibliotecario.getNombre())
             .getResultList();
         
+        ArrayList<DtPrestamo> dtPrestamos = new ArrayList<>();
+        for(Prestamo p : prestamos) {
+            dtPrestamos.add(new DtPrestamo(p.getIdMaterial(), p.getNombreLector(), p.getIdBibliotecario(), p.getFechaSolicitud(), p.getFechaDevolucion(), p.getEstado()));
+        }
+        return dtPrestamos;
+    }
+
+    public List<Prestamo> listarPrestamoPorZona(String zona) {
+            List<Prestamo> prestamos = Conexion.getInstancia().getEntityManager()
+            .createQuery("SELECT p FROM Prestamo p WHERE p.zona = :zona", Prestamo.class)
+            .setParameter("zona", zona)
+            .getResultList();
         ArrayList<DtPrestamo> dtPrestamos = new ArrayList<>();
         for(Prestamo p : prestamos) {
             dtPrestamos.add(new DtPrestamo(p.getIdMaterial(), p.getNombreLector(), p.getIdBibliotecario(), p.getFechaSolicitud(), p.getFechaDevolucion(), p.getEstado()));
