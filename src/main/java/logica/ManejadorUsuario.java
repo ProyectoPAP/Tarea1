@@ -1,6 +1,7 @@
 package logica;
 
 import datatypes.EstadoLector;
+import datatypes.Zona;
 import persistencia.Conexion;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -62,4 +63,17 @@ public class ManejadorUsuario {
         em.merge(usr);
         em.getTransaction().commit();
     }
+
+    public void cambiarZona(String nombre, Zona zona) {
+        Conexion conexion = Conexion.getInstancia();
+        EntityManager em = conexion.getEntityManager();
+
+        Usuario usr = em.find(Usuario.class, nombre);
+        ((Lector) usr).setZona(zona);
+        em.getTransaction().begin();
+        em.merge(usr);
+        em.getTransaction().commit();
+    }
+
+    
 }
