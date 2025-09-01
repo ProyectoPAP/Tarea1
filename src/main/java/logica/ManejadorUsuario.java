@@ -1,6 +1,5 @@
 package logica;
 
-import datatypes.DtUsuario;
 import datatypes.EstadoLector;
 import persistencia.Conexion;
 import javax.persistence.EntityManager;
@@ -22,7 +21,7 @@ public class ManejadorUsuario {
         return instancia;
     }
 
-    public void altaUsuario(DtUsuario usr) {
+    public void altaUsuario(Usuario usr) {
         Conexion conexion = Conexion.getInstancia();
         EntityManager em = conexion.getEntityManager();
         em.getTransaction().begin();
@@ -48,7 +47,7 @@ public class ManejadorUsuario {
 
         ArrayList<String> aRetornar = new ArrayList<>();
         for (Usuario usr : listUsr) {
-            aRetornar.add(usr.getDtUsuario().getNombre());
+            aRetornar.add(usr.getNombre());
         }
         return aRetornar;
     }

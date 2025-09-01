@@ -10,6 +10,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
 import java.util.List;
 
+import datatypes.DtMaterial;
 import logica.Prestamo;
 
 @Entity
@@ -47,12 +48,7 @@ public abstract class Material {
     public void setFechaIngreso(Date fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
     }
-
-    @Override
-    public String toString() {
-        return "Material [id=" + id + ", fechaIngreso=" + fechaIngreso + "]";
-    }
-
+    
     public List<Prestamo> getPrestamos() {
         return prestamos;
     }
@@ -60,4 +56,13 @@ public abstract class Material {
     public void setPrestamos(Prestamo prestamo) {
         this.prestamos.add(prestamo);
     }
+
+    public abstract DtMaterial getDtMaterial();
+
+    @Override
+    public String toString() {
+        return "Material [id=" + id + ", fechaIngreso=" + fechaIngreso + "]";
+    }
+
+
 }
