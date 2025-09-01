@@ -1,5 +1,9 @@
 package interfaces;
 
+import logica.altaDonacionLibro;
+import logica.CtrlAltaDonacionLibro;
+import logica.CtrlAltaDonacionMaterial;
+import logica.CtrlAltaUsuario;
 import logica.CtrlCambiarZonaLector;
 import logica.CtrlListarDonaciones;
 import logica.CtrlListarPrestamoActivoPorLector;
@@ -21,6 +25,18 @@ public class Fabrica {
         if (instancia == null)
             instancia = new Fabrica();
         return instancia;
+    }
+
+    public ICtrlAltaDonacionLibro getCtrlAltaDonacionLibro(){
+        return new ctrlAltaDonacionLibro();
+    }
+
+    public ICtrlAltaDonacionMaterial getCtrlAltaDonacionMaterial(){
+        return new ctrlAltaDonacionMaterial();
+    }
+    
+    public ICtrlAltaUsuario getCtrlAltaUsuario(){
+        return new ctrlAltaUsuario();
     }
 
     public ICtrlCambiarZonaLector getCtrlCambiarZonaLector() {
