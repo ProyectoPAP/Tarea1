@@ -74,6 +74,9 @@ public class Lector extends Usuario{
     public void setPrestamos(List<Prestamo> prestamos) {
         this.prestamos = prestamos;
     }
+    public void modificarEstado(EstadoLector estado) {
+        this.estado = estado;
+    }
 
     @Override
     public String toString() {
