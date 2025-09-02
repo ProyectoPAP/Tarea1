@@ -1,6 +1,8 @@
 package interfaces;
 
 import logica.CtrlAltaUsr;
+import logica.CtrlAltaMaterial;
+import logica.CtrlListarDonaciones;
 import logica.Prestamo;
 import logica.Material;
 import logica.Lector;
@@ -24,5 +26,13 @@ public class Fabrica {
 
     public ICtrlAltaUsr getCtrlAltaUsr() {
         return new CtrlAltaUsr();
+    }
+    
+    public ICtrlAltaMaterial getCtrlAltaMaterial() {
+        return new CtrlAltaMaterial();
+    }
+    
+    public ICtrlListarDonaciones getCtrlListarDonaciones() {
+        return new CtrlListarDonaciones();
     }
 }
