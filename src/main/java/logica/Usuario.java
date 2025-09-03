@@ -10,8 +10,8 @@ import datatypes.DtUsuario;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Usuario {
-    @Id
     private String nombre;
+    @Id
     private String email;
 
     public Usuario() {

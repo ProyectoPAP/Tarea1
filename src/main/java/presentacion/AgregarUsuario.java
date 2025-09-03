@@ -9,8 +9,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
-import javax.swing.ButtonGroup;
-import javax.swing.JRadioButton;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -47,19 +45,18 @@ public class AgregarUsuario extends JInternalFrame {
     private JTextField txtEmail;
     
     // Selector de tipo de usuario
-    private JRadioButton rbLector;
-    private JRadioButton rbBibliotecario;
-    private ButtonGroup bgTipoUsuario;
+    private JComboBox<String> cmbTipoUsuario;
     
     // Campos específicos para Lector
     private JTextField txtDireccion;
-    private JTextField txtFechaRegistro;
-    private JButton btnCalendario;
+    private JSpinner spnFechaRegistro;
     private JComboBox<EstadoLector> cbEstado;
     private JComboBox<Zona> cbZona;
+    private JPanel panelLector;
     
     // Campos específicos para Bibliotecario
     private JTextField txtNumeroEmpleado;
+    private JPanel panelBibliotecario;
     
     // Botones
     private JButton btnAgregar;
@@ -82,9 +79,9 @@ public class AgregarUsuario extends JInternalFrame {
         setupLayout();
         setupListeners();
         
-        // Por defecto seleccionar Lector
-        rbLector.setSelected(true);
-        actualizarCamposVisibles();
+        // Por defecto no mostrar ningún panel específico
+        cmbTipoUsuario.setSelectedIndex(0);
+        mostrarCamposEspecificos("Seleccione tipo...");
     }
     
     private void initComponents() {
@@ -93,31 +90,77 @@ public class AgregarUsuario extends JInternalFrame {
         txtEmail = new JTextField(20);
         
         // Selector de tipo de usuario
-        rbLector = new JRadioButton("Lector");
-        rbBibliotecario = new JRadioButton("Bibliotecario");
-        bgTipoUsuario = new ButtonGroup();
-        bgTipoUsuario.add(rbLector);
-        bgTipoUsuario.add(rbBibliotecario);
+        String[] tipos = {"Seleccione tipo...", "Lector", "Bibliotecario"};
+        cmbTipoUsuario = new JComboBox<>(tipos);
         
         // Campos específicos para Lector
         txtDireccion = new JTextField(20);
         
-        txtFechaRegistro = new JTextField(15);
-        txtFechaRegistro.setEditable(false);
-        txtFechaRegistro.setText(dateFormat.format(new Date()));
-        
-        btnCalendario = new JButton("📅");
-        btnCalendario.setPreferredSize(new Dimension(30, 20));
+        // Fecha de registro automática (solo lectura)
+        SpinnerDateModel dateModel = new SpinnerDateModel();
+        spnFechaRegistro = new JSpinner(dateModel);
+        JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(spnFechaRegistro, "dd/MM/yyyy");
+        spnFechaRegistro.setEditor(dateEditor);
+        spnFechaRegistro.setEnabled(false); // Hacer no editable
         
         cbEstado = new JComboBox<>(EstadoLector.values());
         cbZona = new JComboBox<>(Zona.values());
         
+        // Panel para campos de Lector
+        panelLector = new JPanel(new GridBagLayout());
+        setupPanelLector();
+        
         // Campos específicos para Bibliotecario
         txtNumeroEmpleado = new JTextField(20);
+        
+        // Panel para campos de Bibliotecario
+        panelBibliotecario = new JPanel(new GridBagLayout());
+        setupPanelBibliotecario();
         
         // Botones
         btnAgregar = new JButton("Agregar Usuario");
         btnLimpiar = new JButton("Limpiar");
+        
+        // Inicialmente ocultar ambos paneles
+        panelLector.setVisible(false);
+        panelBibliotecario.setVisible(false);
+    }
+    
+    private void setupPanelLector() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 2);
+        gbc.anchor = GridBagConstraints.WEST;
+        
+        gbc.gridx = 0; gbc.gridy = 0;
+        panelLector.add(new JLabel("Dirección:"), gbc);
+        gbc.gridx = 1;
+        panelLector.add(txtDireccion, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 1;
+        panelLector.add(new JLabel("Fecha de Registro:"), gbc);
+        gbc.gridx = 1;
+        panelLector.add(spnFechaRegistro, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 2;
+        panelLector.add(new JLabel("Estado:"), gbc);
+        gbc.gridx = 1;
+        panelLector.add(cbEstado, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 3;
+        panelLector.add(new JLabel("Zona:"), gbc);
+        gbc.gridx = 1;
+        panelLector.add(cbZona, gbc);
+    }
+    
+    private void setupPanelBibliotecario() {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 2);
+        gbc.anchor = GridBagConstraints.WEST;
+        
+        gbc.gridx = 0; gbc.gridy = 0;
+        panelBibliotecario.add(new JLabel("Número de Empleado:"), gbc);
+        gbc.gridx = 1;
+        panelBibliotecario.add(txtNumeroEmpleado, gbc);
     }
     
     private void setupLayout() {
@@ -128,7 +171,7 @@ public class AgregarUsuario extends JInternalFrame {
         // Título
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 3;
+        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         add(new JLabel("Formulario de Alta de Usuario"), gbc);
         
@@ -139,103 +182,49 @@ public class AgregarUsuario extends JInternalFrame {
         gbc.anchor = GridBagConstraints.EAST;
         add(new JLabel("Tipo de Usuario:"), gbc);
         
-        JPanel panelTipo = new JPanel();
-        panelTipo.add(rbLector);
-        panelTipo.add(rbBibliotecario);
         gbc.gridx = 1;
-        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
-        add(panelTipo, gbc);
+        add(cmbTipoUsuario, gbc);
         
-        // Nombre
+        // Email (campo principal)
         gbc.gridx = 0;
         gbc.gridy = 2;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(new JLabel("Nombre:"), gbc);
-        
-        gbc.gridx = 1;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(txtNombre, gbc);
-        
-        // Email
-        gbc.gridx = 0;
-        gbc.gridy = 3;
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.EAST;
         add(new JLabel("Email:"), gbc);
         
         gbc.gridx = 1;
-        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.WEST;
         add(txtEmail, gbc);
         
-        // Campos específicos para Lector
+        // Nombre
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        add(new JLabel("Nombre:"), gbc);
+        
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        add(txtNombre, gbc);
+        
+        // Panel de Lector
         gbc.gridx = 0;
         gbc.gridy = 4;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(new JLabel("Dirección:"), gbc);
-        
-        gbc.gridx = 1;
         gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(txtDireccion, gbc);
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(panelLector, gbc);
         
-        // Fecha de Registro con botón de calendario
+        // Panel de Bibliotecario
         gbc.gridx = 0;
         gbc.gridy = 5;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(new JLabel("Fecha de Registro:"), gbc);
-        
-        JPanel panelFecha = new JPanel(new BorderLayout());
-        panelFecha.add(txtFechaRegistro, BorderLayout.CENTER);
-        panelFecha.add(btnCalendario, BorderLayout.EAST);
-        
-        gbc.gridx = 1;
         gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(panelFecha, gbc);
-        
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(new JLabel("Estado:"), gbc);
-        
-        gbc.gridx = 1;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(cbEstado, gbc);
-        
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(new JLabel("Zona:"), gbc);
-        
-        gbc.gridx = 1;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(cbZona, gbc);
-        
-        // Campos específicos para Bibliotecario
-        gbc.gridx = 0;
-        gbc.gridy = 8;
-        gbc.gridwidth = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        add(new JLabel("Número de Empleado:"), gbc);
-        
-        gbc.gridx = 1;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        add(txtNumeroEmpleado, gbc);
+        gbc.anchor = GridBagConstraints.CENTER;
+        add(panelBibliotecario, gbc);
         
         // Botones
         gbc.gridx = 0;
-        gbc.gridy = 9;
+        gbc.gridy = 6;
         gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.CENTER;
         add(btnLimpiar, gbc);
@@ -245,30 +234,14 @@ public class AgregarUsuario extends JInternalFrame {
     }
     
     private void setupListeners() {
-        // Listeners para el cambio de tipo de usuario
-        rbLector.addItemListener(new ItemListener() {
+        // Listener para el cambio de tipo de usuario
+        cmbTipoUsuario.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    actualizarCamposVisibles();
+                    String tipoSeleccionado = (String) cmbTipoUsuario.getSelectedItem();
+                    mostrarCamposEspecificos(tipoSeleccionado);
                 }
-            }
-        });
-        
-        rbBibliotecario.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    actualizarCamposVisibles();
-                }
-            }
-        });
-        
-        // Listener para el botón de calendario
-        btnCalendario.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mostrarCalendario();
             }
         });
         
@@ -287,147 +260,45 @@ public class AgregarUsuario extends JInternalFrame {
         });
     }
     
-    private void mostrarCalendario() {
-        JPopupMenu popup = new JPopupMenu();
+    private void mostrarCamposEspecificos(String tipo) {
+        panelLector.setVisible(false);
+        panelBibliotecario.setVisible(false);
         
-        // Crear panel del calendario
-        JPanel panelCalendario = new JPanel(new BorderLayout());
-        panelCalendario.setPreferredSize(new Dimension(300, 250));
-        
-        // Obtener fecha actual
-        Calendar cal = Calendar.getInstance();
-        int mesActual = cal.get(Calendar.MONTH);
-        int añoActual = cal.get(Calendar.YEAR);
-        
-        // Crear tabla del calendario
-        String[] columnas = {"Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"};
-        DefaultTableModel model = new DefaultTableModel(columnas, 0);
-        
-        // Llenar la tabla con los días del mes
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        int primerDia = cal.get(Calendar.DAY_OF_WEEK) - 1;
-        int diasEnMes = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        
-        Object[] fila = new Object[7];
-        int dia = 1;
-        
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 7; j++) {
-                if (i == 0 && j < primerDia) {
-                    fila[j] = "";
-                } else if (dia <= diasEnMes) {
-                    fila[j] = dia++;
-                } else {
-                    fila[j] = "";
-                }
-            }
-            model.addRow(fila);
-            fila = new Object[7];
+        if ("Lector".equals(tipo)) {
+            panelLector.setVisible(true);
+        } else if ("Bibliotecario".equals(tipo)) {
+            panelBibliotecario.setVisible(true);
         }
         
-        JTable tabla = new JTable(model);
-        tabla.setRowHeight(30);
-        tabla.setDefaultRenderer(Object.class, new javax.swing.table.DefaultTableCellRenderer() {
-            @Override
-            public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                return this;
-            }
-        });
-        
-        // Agregar listener para seleccionar fecha
-        tabla.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int row = tabla.getSelectedRow();
-                int col = tabla.getSelectedColumn();
-                Object valor = tabla.getValueAt(row, col);
-                
-                if (valor != null && !valor.toString().isEmpty()) {
-                    try {
-                        int diaSeleccionado = Integer.parseInt(valor.toString());
-                        cal.set(Calendar.DAY_OF_MONTH, diaSeleccionado);
-                        Date fechaSeleccionada = cal.getTime();
-                        txtFechaRegistro.setText(dateFormat.format(fechaSeleccionada));
-                        popup.setVisible(false);
-                    } catch (NumberFormatException ex) {
-                        // Ignorar clics en celdas vacías
-                    }
-                }
-            }
-        });
-        
-        // Panel superior con mes y año
-        JPanel panelSuperior = new JPanel();
-        panelSuperior.add(new JLabel("Mes: " + obtenerNombreMes(mesActual) + " " + añoActual));
-        
-        panelCalendario.add(panelSuperior, BorderLayout.NORTH);
-        panelCalendario.add(new JScrollPane(tabla), BorderLayout.CENTER);
-        
-        popup.add(panelCalendario);
-        
-        // Mostrar popup debajo del botón de calendario
-        popup.show(btnCalendario, 0, btnCalendario.getHeight());
-    }
-    
-    private String obtenerNombreMes(int mes) {
-        String[] nombresMeses = {
-            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-        };
-        return nombresMeses[mes];
-    }
-    
-    private void actualizarCamposVisibles() {
-        if (rbLector.isSelected()) {
-            // Mostrar campos de Lector
-            txtDireccion.setVisible(true);
-            txtFechaRegistro.setVisible(true);
-            btnCalendario.setVisible(true);
-            cbEstado.setVisible(true);
-            cbZona.setVisible(true);
-            
-            // Ocultar campos de Bibliotecario
-            txtNumeroEmpleado.setVisible(false);
-            
-            // Actualizar etiquetas
-            txtDireccion.getParent().getComponent(0).setVisible(true);
-            txtFechaRegistro.getParent().getParent().getComponent(0).setVisible(true);
-            cbEstado.getParent().getComponent(0).setVisible(true);
-            cbZona.getParent().getComponent(0).setVisible(true);
-            txtNumeroEmpleado.getParent().getComponent(0).setVisible(false);
-        } else {
-            // Mostrar campos de Bibliotecario
-            txtNumeroEmpleado.setVisible(true);
-            
-            // Ocultar campos de Lector
-            txtDireccion.setVisible(false);
-            txtFechaRegistro.setVisible(false);
-            btnCalendario.setVisible(false);
-            cbEstado.setVisible(false);
-            cbZona.setVisible(false);
-            
-            // Actualizar etiquetas
-            txtNumeroEmpleado.getParent().getComponent(0).setVisible(true);
-            txtFechaRegistro.getParent().getParent().getComponent(0).setVisible(false);
-            txtDireccion.getParent().getComponent(0).setVisible(false);
-            cbEstado.getParent().getComponent(0).setVisible(false);
-            cbZona.getParent().getComponent(0).setVisible(false);
-        }
-        
-        // Revalidar y repintar
-        revalidate();
-        repaint();
+        // Ajustar el tamaño de la ventana
+        pack();
     }
     
     private void agregarUsuario() {
-        String nombre = txtNombre.getText().trim();
         String email = txtEmail.getText().trim();
+        String nombre = txtNombre.getText().trim();
+        String tipoSeleccionado = (String) cmbTipoUsuario.getSelectedItem();
         
-        if (nombre.isEmpty() || email.isEmpty()) {
+        if (email.isEmpty() || nombre.isEmpty()) {
             JOptionPane.showMessageDialog(this, 
-                "Por favor complete los campos obligatorios (Nombre y Email)", 
+                "Por favor complete los campos obligatorios (Email y Nombre)", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Validar formato de email
+        if (!validarFormatoEmail(email)) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor ingrese un formato de email válido", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if ("Seleccione tipo...".equals(tipoSeleccionado)) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione un tipo de usuario", 
                 "Error", 
                 JOptionPane.ERROR_MESSAGE);
             return;
@@ -436,7 +307,7 @@ public class AgregarUsuario extends JInternalFrame {
         try {
             DtUsuario usuario;
             
-            if (rbLector.isSelected()) {
+            if ("Lector".equals(tipoSeleccionado)) {
                 // Validar campos específicos de Lector
                 String direccion = txtDireccion.getText().trim();
                 if (direccion.isEmpty()) {
@@ -447,23 +318,13 @@ public class AgregarUsuario extends JInternalFrame {
                     return;
                 }
                 
-                // Parsear fecha del campo de texto
-                Date fechaRegistro;
-                try {
-                    fechaRegistro = dateFormat.parse(txtFechaRegistro.getText());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(this, 
-                        "Por favor seleccione una fecha válida", 
-                        "Error", 
-                        JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                
+                // Fecha automática del sistema
+                Date fechaRegistro = new Date();
                 EstadoLector estado = (EstadoLector) cbEstado.getSelectedItem();
                 Zona zona = (Zona) cbZona.getSelectedItem();
                 
                 usuario = new DtLector(nombre, email, direccion, fechaRegistro, estado, zona);
-            } else {
+            } else if ("Bibliotecario".equals(tipoSeleccionado)) {
                 // Validar campos específicos de Bibliotecario
                 String numeroEmpleado = txtNumeroEmpleado.getText().trim();
                 if (numeroEmpleado.isEmpty()) {
@@ -475,12 +336,14 @@ public class AgregarUsuario extends JInternalFrame {
                 }
                 
                 usuario = new DtBibliotecario(nombre, email, numeroEmpleado);
+            } else {
+                return; // No debería llegar aquí
             }
             
             ctrlAltaUsr.altaUsuario(usuario);
             
             JOptionPane.showMessageDialog(this, 
-                "Usuario " + (rbLector.isSelected() ? "Lector" : "Bibliotecario") + " agregado exitosamente", 
+                "Usuario " + tipoSeleccionado + " agregado exitosamente", 
                 "Éxito", 
                 JOptionPane.INFORMATION_MESSAGE);
             
@@ -493,16 +356,25 @@ public class AgregarUsuario extends JInternalFrame {
         }
     }
     
+    private boolean validarFormatoEmail(String email) {
+        // Validación básica de formato de email
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        return email.matches(emailRegex);
+    }
+    
     private void limpiarCampos() {
         txtNombre.setText("");
         txtEmail.setText("");
         txtDireccion.setText("");
         txtNumeroEmpleado.setText("");
-        txtFechaRegistro.setText(dateFormat.format(new Date()));
+        spnFechaRegistro.setValue(new Date());
         cbEstado.setSelectedIndex(0);
         cbZona.setSelectedIndex(0);
-        rbLector.setSelected(true);
-        actualizarCamposVisibles();
-        txtNombre.requestFocus();
+        cmbTipoUsuario.setSelectedIndex(0);
+        
+        panelLector.setVisible(false);
+        panelBibliotecario.setVisible(false);
+        
+        txtEmail.requestFocus();
     }
 }

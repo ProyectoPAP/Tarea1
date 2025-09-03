@@ -52,6 +52,21 @@ public class ManejadorMaterial {
         return aRetornar;
     }
 
+    public ArrayList<Material> obtenerMaterialesCompletos() {
+        Conexion conexion = Conexion.getInstancia();
+        EntityManager em = conexion.getEntityManager();
+
+        Query query = em.createQuery("SELECT m FROM Material m");
+
+        List<Material> listMaterial = (List<Material>) query.getResultList();
+
+        ArrayList<Material> aRetornar = new ArrayList<>();
+        for (Material material : listMaterial) {
+            aRetornar.add(material);
+        }
+        return aRetornar;
+    }
+
     public ArrayList<String> obtenerMaterialesPorFecha(Date fechaIni, Date fechaFin) {
         Conexion conexion = Conexion.getInstancia();
         EntityManager em = conexion.getEntityManager();
@@ -65,6 +80,23 @@ public class ManejadorMaterial {
         ArrayList<String> aRetornar = new ArrayList<>();
         for (Material material : listMaterial) {
             aRetornar.add(material.getId());
+        }
+        return aRetornar;
+    }
+
+    public ArrayList<Material> obtenerMaterialesCompletosPorFecha(Date fechaIni, Date fechaFin) {
+        Conexion conexion = Conexion.getInstancia();
+        EntityManager em = conexion.getEntityManager();
+
+        Query query = em.createQuery("SELECT m FROM Material m WHERE m.fechaIngreso BETWEEN :fechaIni AND :fechaFin");
+        query.setParameter("fechaIni", fechaIni);
+        query.setParameter("fechaFin", fechaFin);
+
+        List<Material> listMaterial = (List<Material>) query.getResultList();
+
+        ArrayList<Material> aRetornar = new ArrayList<>();
+        for (Material material : listMaterial) {
+            aRetornar.add(material);
         }
         return aRetornar;
     }

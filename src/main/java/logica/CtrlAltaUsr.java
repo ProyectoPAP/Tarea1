@@ -10,7 +10,7 @@ public class CtrlAltaUsr implements ICtrlAltaUsr{
     @Override
     public void altaUsuario(DtUsuario usr) {
         ManejadorUsuario mU = ManejadorUsuario.getInstancia();
-        Usuario nuevoUsr = mU.buscarUsuario(usr.getNombre());
+        Usuario nuevoUsr = mU.buscarUsuario(usr.getEmail());
         if (nuevoUsr != null) {
             throw new RuntimeException("El usuario ya existe");
         }

@@ -11,6 +11,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
 
+import datatypes.DtPrestamo;
+import datatypes.DtLector;
+import datatypes.DtBibliotecario;
 import datatypes.EstadoPrestamo;
 import persistencia.PrestamoID;
 
@@ -108,6 +111,10 @@ public class Prestamo {
 
     public void setEstado(EstadoPrestamo estado) {
         this.estado = estado;
+    }
+
+    public DtPrestamo getDtPrestamo() {
+        return new DtPrestamo(material.getDtMaterial(), (DtLector) lector.getDtUsuario(), (DtBibliotecario) bibliotecario.getDtUsuario(), fechaPrestamo, fechaDevolucion, estado);
     }
 
     @Override

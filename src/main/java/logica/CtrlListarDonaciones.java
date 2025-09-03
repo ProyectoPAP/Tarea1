@@ -9,28 +9,28 @@ import interfaces.ICtrlListarDonaciones;
 public class CtrlListarDonaciones implements ICtrlListarDonaciones{
     
     @Override
-    public String[] listarDonaciones() {
-        ArrayList<String> materiales;
+    public DtMaterial[] listarDonaciones() {
+        ArrayList<Material> materiales;
         ManejadorMaterial mM = ManejadorMaterial.getInstancia();
-        materiales = mM.obtenerMateriales();
-        String [] materiales_ret = new String[materiales.size()];
+        materiales = mM.obtenerMaterialesCompletos();
+        DtMaterial[] materiales_ret = new DtMaterial[materiales.size()];
         int i=0;
-        for (String material : materiales) {
-            materiales_ret[i] = material;
+        for (Material material : materiales) {
+            materiales_ret[i] = material.getDtMaterial();
             i++;
         }
         return materiales_ret;
     }
 
     @Override
-    public String[] listarDonacionesPorFecha(Date fechaIni, Date fechaFin) {
-        ArrayList<String> materiales;
+    public DtMaterial[] listarDonacionesPorFecha(Date fechaIni, Date fechaFin) {
+        ArrayList<Material> materiales;
         ManejadorMaterial mM = ManejadorMaterial.getInstancia();
-        materiales = mM.obtenerMaterialesPorFecha(fechaIni, fechaFin);
-        String [] materiales_ret = new String[materiales.size()];
+        materiales = mM.obtenerMaterialesCompletosPorFecha(fechaIni, fechaFin);
+        DtMaterial[] materiales_ret = new DtMaterial[materiales.size()];
         int i=0;
-        for (String material : materiales) {
-            materiales_ret[i] = material;
+        for (Material material : materiales) {
+            materiales_ret[i] = material.getDtMaterial();
             i++;
         }
         return materiales_ret;

@@ -1,8 +1,9 @@
 package interfaces;
 
 import java.util.Date;
+import datatypes.DtMaterial;
 
 public interface ICtrlListarDonaciones {
-    public String[] listarDonaciones();
-    public String[] listarDonacionesPorFecha(Date fechaIni, Date fechaFin);
+    public DtMaterial[] listarDonaciones();
+    public DtMaterial[] listarDonacionesPorFecha(Date fechaIni, Date fechaFin);
 }

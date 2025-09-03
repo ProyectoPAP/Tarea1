@@ -3,19 +3,24 @@ package presentacion;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.JTextArea;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import interfaces.ICtrlListarDonaciones;
+import datatypes.DtMaterial;
+import datatypes.DtLibro;
+import datatypes.DtArticulo;
 
 public class ListarDonaciones extends JInternalFrame {
     private static final long serialVersionUID = 1L;
@@ -27,14 +32,18 @@ public class ListarDonaciones extends JInternalFrame {
     private JButton btnListarTodas;
     private JButton btnListarPorFecha;
     private JButton btnLimpiar;
-    private JTextArea txtResultado;
+    private JTable tablaDonaciones;
+    private DefaultTableModel modeloTabla;
     private JScrollPane scrollPane;
+    
+    // Formato de fecha para mostrar
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     
     public ListarDonaciones(ICtrlListarDonaciones ctrlListarDonaciones) {
         this.ctrlListarDonaciones = ctrlListarDonaciones;
         
         setTitle("Listar Donaciones");
-        setSize(500, 400);
+        setSize(800, 500);
         setClosable(true);
         setResizable(false);
         setMaximizable(false);
@@ -61,12 +70,20 @@ public class ListarDonaciones extends JInternalFrame {
         btnListarPorFecha = new JButton("Listar por Fecha");
         btnLimpiar = new JButton("Limpiar");
         
-        txtResultado = new JTextArea();
-        txtResultado.setEditable(false);
-        txtResultado.setLineWrap(true);
-        txtResultado.setWrapStyleWord(true);
+        // Crear tabla
+        String[] columnas = {"ID", "Tipo", "Fecha Ingreso", "Información Adicional"};
+        modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Hacer la tabla no editable
+            }
+        };
         
-        scrollPane = new JScrollPane(txtResultado);
+        tablaDonaciones = new JTable(modeloTabla);
+        tablaDonaciones.setRowHeight(25);
+        tablaDonaciones.getTableHeader().setReorderingAllowed(false);
+        
+        scrollPane = new JScrollPane(tablaDonaciones);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
@@ -97,6 +114,7 @@ public class ListarDonaciones extends JInternalFrame {
         // Fecha Fin
         gbc.gridx = 0;
         gbc.gridy = 2;
+        gbc.gridwidth = 1;
         gbc.anchor = GridBagConstraints.EAST;
         add(new JLabel("Fecha Fin:"), gbc);
         
@@ -117,7 +135,7 @@ public class ListarDonaciones extends JInternalFrame {
         gbc.gridx = 2;
         add(btnLimpiar, gbc);
         
-        // Área de resultado
+        // Tabla de resultados
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 3;
@@ -152,8 +170,8 @@ public class ListarDonaciones extends JInternalFrame {
     
     private void listarTodasLasDonaciones() {
         try {
-            String[] donaciones = ctrlListarDonaciones.listarDonaciones();
-            mostrarResultado(donaciones, "Todas las donaciones");
+            DtMaterial[] donaciones = ctrlListarDonaciones.listarDonaciones();
+            mostrarResultadoEnTabla(donaciones, "Todas las donaciones");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, 
                 "Error al listar donaciones: " + ex.getMessage(), 
@@ -175,8 +193,8 @@ public class ListarDonaciones extends JInternalFrame {
         }
         
         try {
-            String[] donaciones = ctrlListarDonaciones.listarDonacionesPorFecha(fechaIni, fechaFin);
-            mostrarResultado(donaciones, "Donaciones del " + fechaIni + " al " + fechaFin);
+            DtMaterial[] donaciones = ctrlListarDonaciones.listarDonacionesPorFecha(fechaIni, fechaFin);
+            mostrarResultadoEnTabla(donaciones, "Donaciones del " + dateFormat.format(fechaIni) + " al " + dateFormat.format(fechaFin));
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, 
                 "Error al listar donaciones por fecha: " + ex.getMessage(), 
@@ -185,24 +203,60 @@ public class ListarDonaciones extends JInternalFrame {
         }
     }
     
-    private void mostrarResultado(String[] donaciones, String titulo) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(titulo).append(":\n\n");
+    private void mostrarResultadoEnTabla(DtMaterial[] donaciones, String titulo) {
+        // Limpiar tabla
+        modeloTabla.setRowCount(0);
         
         if (donaciones == null || donaciones.length == 0) {
-            sb.append("No se encontraron donaciones.");
-        } else {
-            for (int i = 0; i < donaciones.length; i++) {
-                sb.append(i + 1).append(". ").append(donaciones[i]).append("\n");
-            }
+            JOptionPane.showMessageDialog(this, 
+                "No se encontraron donaciones.", 
+                "Información", 
+                JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
         
-        txtResultado.setText(sb.toString());
-        txtResultado.setCaretPosition(0);
+        // Agregar filas a la tabla
+        for (DtMaterial material : donaciones) {
+            String id = material.getId();
+            String fechaIngreso = dateFormat.format(material.getFechaIngreso());
+            String tipo = obtenerTipoMaterial(material);
+            String infoAdicional = obtenerInformacionAdicional(material);
+            
+            Object[] fila = {id, tipo, fechaIngreso, infoAdicional};
+            modeloTabla.addRow(fila);
+        }
+        
+        // Mostrar mensaje de éxito
+        JOptionPane.showMessageDialog(this, 
+            "Se encontraron " + donaciones.length + " donaciones.", 
+            "Éxito", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private String obtenerTipoMaterial(DtMaterial material) {
+        if (material instanceof DtLibro) {
+            return "Libro";
+        } else if (material instanceof DtArticulo) {
+            return "Artículo";
+        } else {
+            return "Material";
+        }
+    }
+    
+    private String obtenerInformacionAdicional(DtMaterial material) {
+        if (material instanceof DtLibro) {
+            DtLibro libro = (DtLibro) material;
+            return "Título: " + libro.getTitulo() + " | Páginas: " + libro.getCantidadPaginas();
+        } else if (material instanceof DtArticulo) {
+            DtArticulo articulo = (DtArticulo) material;
+            return "Descripción: " + articulo.getDescripcion() + " | Peso: " + articulo.getPesoKg() + " kg | Dimensiones: " + articulo.getDimensiones();
+        } else {
+            return "Sin información adicional";
+        }
     }
     
     private void limpiarResultado() {
-        txtResultado.setText("");
+        modeloTabla.setRowCount(0);
         spnFechaIni.setValue(new Date());
         spnFechaFin.setValue(new Date());
     }

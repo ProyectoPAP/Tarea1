@@ -7,6 +7,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import java.util.List;
 import java.util.ArrayList;
+import datatypes.DtPrestamo;
+import datatypes.EstadoPrestamo;
 
 public class ManejadorUsuario {
     private static ManejadorUsuario instancia = null;
@@ -30,11 +32,11 @@ public class ManejadorUsuario {
         em.getTransaction().commit();
     }
 
-    public Usuario buscarUsuario(String nombre) {
+    public Usuario buscarUsuario(String email) {
         Conexion conexion = Conexion.getInstancia();
         EntityManager em = conexion.getEntityManager();
         
-        Usuario usr = em.find(Usuario.class, nombre);
+        Usuario usr = em.find(Usuario.class, email);
         return usr;
     }
 
@@ -48,32 +50,50 @@ public class ManejadorUsuario {
 
         ArrayList<String> aRetornar = new ArrayList<>();
         for (Usuario usr : listUsr) {
-            aRetornar.add(usr.getNombre());
+            aRetornar.add(usr.getEmail());
         }
         return aRetornar;
     }
 
-    public void suspenderUsuario(String nombre) {
+    public void suspenderUsuario(String email) {
         Conexion conexion = Conexion.getInstancia();
         EntityManager em = conexion.getEntityManager();
 
-        Usuario usr = em.find(Usuario.class, nombre);
+        Usuario usr = em.find(Usuario.class, email);
         ((Lector) usr).setEstado(EstadoLector.SUSPENDIDO);
         em.getTransaction().begin();
         em.merge(usr);
         em.getTransaction().commit();
     }
 
-    public void cambiarZona(String nombre, Zona zona) {
+    public void cambiarZona(String email, Zona zona) {
         Conexion conexion = Conexion.getInstancia();
         EntityManager em = conexion.getEntityManager();
 
-        Usuario usr = em.find(Usuario.class, nombre);
+        Usuario usr = em.find(Usuario.class, email);
         ((Lector) usr).setZona(zona);
         em.getTransaction().begin();
         em.merge(usr);
         em.getTransaction().commit();
     }
 
+    public ArrayList<DtPrestamo> getPrestamosActivos(String email) {
+        Conexion conexion = Conexion.getInstancia();
+        EntityManager em = conexion.getEntityManager();
+        
+        Usuario usr = em.find(Usuario.class, email);
+        if (usr instanceof Lector) {
+            ArrayList<DtPrestamo> aRetornar = new ArrayList<>();
+            for (Prestamo prestamo : ((Lector) usr).getPrestamos()) {
+                if (prestamo.getEstado() == EstadoPrestamo.EN_CURSO) {
+                    aRetornar.add(prestamo.getDtPrestamo());
+                }
+            }
+            return aRetornar;
+        } else {
+            return null;
+        }
+        
+    }
     
 }

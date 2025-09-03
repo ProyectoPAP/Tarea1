@@ -14,6 +14,10 @@ import interfaces.Fabrica;
 import interfaces.ICtrlAltaUsr;
 import interfaces.ICtrlListarDonaciones;
 import interfaces.ICtrlAltaMaterial;
+import interfaces.ICtrlAltaPrestamo;
+import interfaces.ICtrlListarPrestamos;
+import presentacion.AgregarPrestamo;
+import presentacion.ListarPrestamos;
 
 public class Principal {
     private JFrame frame;
@@ -21,6 +25,8 @@ public class Principal {
     private AgregarUsuario agregarUsuarioInternalFrame;
     private AgregarMaterial agregarMaterialInternalFrame;
     private ListarDonaciones listarDonacionesInternalFrame;
+    private AgregarPrestamo agregarPrestamoInternalFrame;
+    private ListarPrestamos listarPrestamosInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -42,6 +48,8 @@ public class Principal {
         ICtrlAltaUsr iCtrlAltaUsr = fabrica.getCtrlAltaUsr();
         ICtrlAltaMaterial iCtrlAltaMaterial = fabrica.getCtrlAltaMaterial();
         ICtrlListarDonaciones iCtrlListarDonaciones = fabrica.getCtrlListarDonaciones();
+        ICtrlAltaPrestamo iCtrlAltaPrestamo = fabrica.getCtrlAltaPrestamo();
+        ICtrlListarPrestamos iCtrlListarPrestamos = fabrica.getCtrlListarPrestamos();
 
         Dimension desktopSize = frame.getSize();
         Dimension jInternalFrameSize;
@@ -66,6 +74,20 @@ public class Principal {
 		    (desktopSize.height- jInternalFrameSize.height)/2);
 		listarDonacionesInternalFrame.setVisible(false);
 		frame.getContentPane().add(listarDonacionesInternalFrame);
+
+        agregarPrestamoInternalFrame = new AgregarPrestamo(iCtrlAltaPrestamo, iCtrlAltaUsr, iCtrlAltaMaterial);
+		jInternalFrameSize = agregarPrestamoInternalFrame.getSize();
+		agregarPrestamoInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		agregarPrestamoInternalFrame.setVisible(false);
+		frame.getContentPane().add(agregarPrestamoInternalFrame);
+
+        listarPrestamosInternalFrame = new ListarPrestamos(iCtrlListarPrestamos);
+		jInternalFrameSize = listarPrestamosInternalFrame.getSize();
+		listarPrestamosInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		listarPrestamosInternalFrame.setVisible(false);
+		frame.getContentPane().add(listarPrestamosInternalFrame);
     }
 
     private void initialize() {
@@ -99,6 +121,13 @@ public class Principal {
         JMenu mnModificaciones = new JMenu("Modificaciones");
         menuBar.add(mnModificaciones);
 
+        JMenuItem mntmAgregarPrestamo = new JMenuItem("Agregar Prestamo");
+        mntmAgregarPrestamo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                agregarPrestamoInternalFrame.setVisible(true);
+            }
+        });
+        mnModificaciones.add(mntmAgregarPrestamo);
 
 
         JMenu mnListados = new JMenu("Listados");
@@ -111,5 +140,13 @@ public class Principal {
             }
         });
         mnListados.add(mntmListarDonaciones);
+
+        JMenuItem mntmListarPrestamos = new JMenuItem("Listar Prestamos");
+        mntmListarPrestamos.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                listarPrestamosInternalFrame.setVisible(true);
+            }
+        });
+        mnListados.add(mntmListarPrestamos);
     }
 }
