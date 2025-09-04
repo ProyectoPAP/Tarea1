@@ -11,6 +11,8 @@ import logica.Articulo;
 import logica.Libro;
 import logica.CtrlAltaPrestamo;
 import logica.CtrlListarPrestamos;
+import logica.CtrlCambiarZonaLector;
+import logica.CtrlSuspenderUsuario;
 
 public class Fabrica {
     private static Fabrica instancia = null;
@@ -44,5 +46,13 @@ public class Fabrica {
 
     public ICtrlListarPrestamos getCtrlListarPrestamos() {
         return new CtrlListarPrestamos();
+    }
+    
+    public ICtrlCambiarZonaLector getCtrlCambiarZonaLector() {
+        return new CtrlCambiarZonaLector();
+    }
+    
+    public ICtrlSuspenderUsuario getCtrlSuspenderUsuario() {
+        return new CtrlSuspenderUsuario();
     }
 }

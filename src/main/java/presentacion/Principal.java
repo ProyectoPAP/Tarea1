@@ -16,8 +16,9 @@ import interfaces.ICtrlListarDonaciones;
 import interfaces.ICtrlAltaMaterial;
 import interfaces.ICtrlAltaPrestamo;
 import interfaces.ICtrlListarPrestamos;
-import presentacion.AgregarPrestamo;
-import presentacion.ListarPrestamos;
+import interfaces.ICtrlCambiarZonaLector;
+import interfaces.ICtrlSuspenderUsuario;
+
 
 public class Principal {
     private JFrame frame;
@@ -27,6 +28,8 @@ public class Principal {
     private ListarDonaciones listarDonacionesInternalFrame;
     private AgregarPrestamo agregarPrestamoInternalFrame;
     private ListarPrestamos listarPrestamosInternalFrame;
+    private CambiarZonaLector cambiarZonaLectorInternalFrame;
+    private SuspenderUsuario suspenderUsuarioInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -50,6 +53,8 @@ public class Principal {
         ICtrlListarDonaciones iCtrlListarDonaciones = fabrica.getCtrlListarDonaciones();
         ICtrlAltaPrestamo iCtrlAltaPrestamo = fabrica.getCtrlAltaPrestamo();
         ICtrlListarPrestamos iCtrlListarPrestamos = fabrica.getCtrlListarPrestamos();
+        ICtrlCambiarZonaLector iCtrlCambiarZonaLector = fabrica.getCtrlCambiarZonaLector();
+        ICtrlSuspenderUsuario iCtrlSuspenderUsuario = fabrica.getCtrlSuspenderUsuario();
 
         Dimension desktopSize = frame.getSize();
         Dimension jInternalFrameSize;
@@ -88,6 +93,20 @@ public class Principal {
 		    (desktopSize.height- jInternalFrameSize.height)/2);
 		listarPrestamosInternalFrame.setVisible(false);
 		frame.getContentPane().add(listarPrestamosInternalFrame);
+
+        cambiarZonaLectorInternalFrame = new CambiarZonaLector(iCtrlCambiarZonaLector);
+		jInternalFrameSize = cambiarZonaLectorInternalFrame.getSize();
+		cambiarZonaLectorInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		cambiarZonaLectorInternalFrame.setVisible(false);
+		frame.getContentPane().add(cambiarZonaLectorInternalFrame);
+
+        suspenderUsuarioInternalFrame = new SuspenderUsuario(iCtrlSuspenderUsuario);
+		jInternalFrameSize = suspenderUsuarioInternalFrame.getSize();
+		suspenderUsuarioInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		suspenderUsuarioInternalFrame.setVisible(false);
+		frame.getContentPane().add(suspenderUsuarioInternalFrame);
     }
 
     private void initialize() {
@@ -128,6 +147,22 @@ public class Principal {
             }
         });
         mnModificaciones.add(mntmAgregarPrestamo);
+
+        JMenuItem mntmCambiarZonaLector = new JMenuItem("Cambiar Zona Lector");
+        mntmCambiarZonaLector.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cambiarZonaLectorInternalFrame.setVisible(true);
+            }
+        });
+        mnModificaciones.add(mntmCambiarZonaLector);
+
+        JMenuItem mntmSuspenderUsuario = new JMenuItem("Suspender/Activar Usuario");
+        mntmSuspenderUsuario.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                suspenderUsuarioInternalFrame.setVisible(true);
+            }
+        });
+        mnModificaciones.add(mntmSuspenderUsuario);
 
 
         JMenu mnListados = new JMenu("Listados");
