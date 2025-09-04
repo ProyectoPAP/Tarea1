@@ -11,6 +11,7 @@ import logica.Articulo;
 import logica.Libro;
 import logica.CtrlAltaPrestamo;
 import logica.CtrlListarPrestamos;
+import logica.CtrlListarPreActLector;
 
 public class Fabrica {
     private static Fabrica instancia = null;
@@ -44,5 +45,9 @@ public class Fabrica {
 
     public ICtrlListarPrestamos getCtrlListarPrestamos() {
         return new CtrlListarPrestamos();
+    }
+
+    public ICtrlListarPrestActXLector getCtrlListarPreActLector() {
+        return new CtrlListarPreActLector();
     }
 }

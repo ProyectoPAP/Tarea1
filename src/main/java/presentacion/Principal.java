@@ -1,6 +1,7 @@
 package presentacion;
 
 import java.awt.Dimension;
+
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,8 +17,10 @@ import interfaces.ICtrlListarDonaciones;
 import interfaces.ICtrlAltaMaterial;
 import interfaces.ICtrlAltaPrestamo;
 import interfaces.ICtrlListarPrestamos;
+import interfaces.ICtrlListarPrestActXLector;
 import presentacion.AgregarPrestamo;
 import presentacion.ListarPrestamos;
+import presentacion.ListarPrestamosActivosLector;
 
 public class Principal {
     private JFrame frame;
@@ -27,6 +30,7 @@ public class Principal {
     private ListarDonaciones listarDonacionesInternalFrame;
     private AgregarPrestamo agregarPrestamoInternalFrame;
     private ListarPrestamos listarPrestamosInternalFrame;
+    private ListarPrestamosActivosLector listarPrestamosActivosLectorInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -50,6 +54,7 @@ public class Principal {
         ICtrlListarDonaciones iCtrlListarDonaciones = fabrica.getCtrlListarDonaciones();
         ICtrlAltaPrestamo iCtrlAltaPrestamo = fabrica.getCtrlAltaPrestamo();
         ICtrlListarPrestamos iCtrlListarPrestamos = fabrica.getCtrlListarPrestamos();
+        ICtrlListarPrestActXLector iCtrlListarPreActLector = fabrica.getCtrlListarPreActLector();
 
         Dimension desktopSize = frame.getSize();
         Dimension jInternalFrameSize;
@@ -88,6 +93,13 @@ public class Principal {
 		    (desktopSize.height- jInternalFrameSize.height)/2);
 		listarPrestamosInternalFrame.setVisible(false);
 		frame.getContentPane().add(listarPrestamosInternalFrame);
+
+        listarPrestamosActivosLectorInternalFrame = new ListarPrestamosActivosLector(iCtrlListarPreActLector);
+		jInternalFrameSize = listarPrestamosActivosLectorInternalFrame.getSize();
+		listarPrestamosActivosLectorInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		listarPrestamosActivosLectorInternalFrame.setVisible(false);
+		frame.getContentPane().add(listarPrestamosActivosLectorInternalFrame);
     }
 
     private void initialize() {
@@ -148,5 +160,13 @@ public class Principal {
             }
         });
         mnListados.add(mntmListarPrestamos);
+
+        JMenuItem mntmListarPrestamosActivosLector = new JMenuItem("Listar Préstamos Activos por Lector");
+        mntmListarPrestamosActivosLector.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                listarPrestamosActivosLectorInternalFrame.setVisible(true);
+            }
+        });
+        mnListados.add(mntmListarPrestamosActivosLector);
     }
 }

@@ -6,6 +6,7 @@ import javax.persistence.Query;
 import java.util.List;
 import java.util.ArrayList;
 import datatypes.DtPrestamo;
+import datatypes.EstadoPrestamo;
 
 public class ManejadorPrestamo {
     private static ManejadorPrestamo instancia = null;
@@ -56,4 +57,28 @@ public class ManejadorPrestamo {
         }
         return aRetornar;
     }
+
+    public List<Prestamo> obtenerPrestamosActivos(String mail){ //verificar si esta bien
+        // 1. Obtener el usuario por mail
+        ManejadorUsuario mU = ManejadorUsuario.getInstancia();
+        Usuario u = mU.buscarUsuario(mail);
+        
+        // 2. Hacer casting a Lector
+        Lector l = (Lector) u;
+        
+        // 3. Obtener todos los préstamos del lector
+        List<Prestamo> todosLosPrestamos = l.getPrestamos();
+        
+        // 4. Filtrar solo los activos (PENDIENTE o EN_CURSO)
+        List<Prestamo> prestamosActivos = new ArrayList<>();
+        for(Prestamo p : todosLosPrestamos) {
+            if(p.getEstado() == EstadoPrestamo.PENDIENTE || 
+               p.getEstado() == EstadoPrestamo.EN_CURSO) {
+                prestamosActivos.add(p);
+            }
+        }
+        
+        return prestamosActivos;
+    }
 }
+
