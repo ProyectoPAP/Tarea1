@@ -18,7 +18,7 @@ import interfaces.ICtrlAltaPrestamo;
 import interfaces.ICtrlListarPrestamos;
 import interfaces.ICtrlCambiarZonaLector;
 import interfaces.ICtrlSuspenderUsuario;
-
+import interfaces.ICtrlListarPrestamosBibliotecario;
 
 public class Principal {
     private JFrame frame;
@@ -30,6 +30,7 @@ public class Principal {
     private ListarPrestamos listarPrestamosInternalFrame;
     private CambiarZonaLector cambiarZonaLectorInternalFrame;
     private SuspenderUsuario suspenderUsuarioInternalFrame;
+    private ListarPrestamosBibliotecario listarPrestamosBibliotecarioInternalFrame;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -55,6 +56,7 @@ public class Principal {
         ICtrlListarPrestamos iCtrlListarPrestamos = fabrica.getCtrlListarPrestamos();
         ICtrlCambiarZonaLector iCtrlCambiarZonaLector = fabrica.getCtrlCambiarZonaLector();
         ICtrlSuspenderUsuario iCtrlSuspenderUsuario = fabrica.getCtrlSuspenderUsuario();
+        ICtrlListarPrestamosBibliotecario iCtrlListarPrestamosBibliotecario = fabrica.getCtrlListarPrestamosBibliotecario();
 
         Dimension desktopSize = frame.getSize();
         Dimension jInternalFrameSize;
@@ -107,6 +109,13 @@ public class Principal {
 		    (desktopSize.height- jInternalFrameSize.height)/2);
 		suspenderUsuarioInternalFrame.setVisible(false);
 		frame.getContentPane().add(suspenderUsuarioInternalFrame);
+
+        listarPrestamosBibliotecarioInternalFrame = new ListarPrestamosBibliotecario(iCtrlListarPrestamosBibliotecario);
+		jInternalFrameSize = listarPrestamosBibliotecarioInternalFrame.getSize();
+		listarPrestamosBibliotecarioInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		listarPrestamosBibliotecarioInternalFrame.setVisible(false);
+		frame.getContentPane().add(listarPrestamosBibliotecarioInternalFrame);
     }
 
     private void initialize() {
@@ -137,16 +146,16 @@ public class Principal {
         });
         mnAltas.add(mntmAgregarMaterial);
 
-        JMenu mnModificaciones = new JMenu("Modificaciones");
-        menuBar.add(mnModificaciones);
-
         JMenuItem mntmAgregarPrestamo = new JMenuItem("Agregar Prestamo");
         mntmAgregarPrestamo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 agregarPrestamoInternalFrame.setVisible(true);
             }
         });
-        mnModificaciones.add(mntmAgregarPrestamo);
+        mnAltas.add(mntmAgregarPrestamo);
+
+        JMenu mnModificaciones = new JMenu("Modificaciones");
+        menuBar.add(mnModificaciones);
 
         JMenuItem mntmCambiarZonaLector = new JMenuItem("Cambiar Zona Lector");
         mntmCambiarZonaLector.addActionListener(new ActionListener() {
@@ -183,5 +192,13 @@ public class Principal {
             }
         });
         mnListados.add(mntmListarPrestamos);
+
+        JMenuItem mntmListarPrestamosBibliotecario = new JMenuItem("Listar Prestamos (Bibliotecario)");
+        mntmListarPrestamosBibliotecario.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                listarPrestamosBibliotecarioInternalFrame.setVisible(true);
+            }
+        });
+        mnListados.add(mntmListarPrestamosBibliotecario);
     }
 }

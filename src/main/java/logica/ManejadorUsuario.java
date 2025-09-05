@@ -141,4 +141,24 @@ public class ManejadorUsuario {
         }
         return dtUsuarios;
     }
+
+    public DtPrestamo[] obtenerPrestamos(String email) {
+        Conexion conexion = Conexion.getInstancia();
+        EntityManager em = conexion.getEntityManager();
+
+        Bibliotecario usr = em.find(Bibliotecario.class, email);
+        if (usr instanceof Bibliotecario) {
+            Query query = em.createQuery("SELECT p FROM Prestamo p WHERE p.bibliotecario.email = :email");
+            query.setParameter("email", email);
+            List<Prestamo> prestamos = query.getResultList();
+
+            DtPrestamo[] dtPrestamos = new DtPrestamo[prestamos.size()];
+            for (int i = 0; i < prestamos.size(); i++) {
+                dtPrestamos[i] = prestamos.get(i).getDtPrestamo();
+            }
+        return dtPrestamos;
+        } else {
+            throw new IllegalArgumentException("Solo se pueden obtener prestamos de usuarios que sean bibliotecarios");
+        }
+    }
 }
