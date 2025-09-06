@@ -20,6 +20,7 @@ import interfaces.ICtrlCambiarZonaLector;
 import interfaces.ICtrlSuspenderUsuario;
 import interfaces.ICtrlListarPrestamosBibliotecario;
 import interfaces.ICtrlListarPrestamosPorZona;
+import interfaces.ICtrlListarCantidadVecesPrestados;
 
 public class Principal {
     private JFrame frame;
@@ -33,6 +34,7 @@ public class Principal {
     private SuspenderUsuario suspenderUsuarioInternalFrame;
     private ListarPrestamosBibliotecario listarPrestamosBibliotecarioInternalFrame;
     private ListarPrestamosPorZona listarPrestamosPorZonaInternalFrame;
+    private ListarCantidadVecesPrestados listarCantidadVecesPrestadosInternalFrame;
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -59,6 +61,7 @@ public class Principal {
         ICtrlSuspenderUsuario iCtrlSuspenderUsuario = fabrica.getCtrlSuspenderUsuario();
         ICtrlListarPrestamosBibliotecario iCtrlListarPrestamosBibliotecario = fabrica.getCtrlListarPrestamosBibliotecario();
         ICtrlListarPrestamosPorZona iCtrlListarPrestamosPorZona = fabrica.getCtrlListarPrestamosPorZona();
+        ICtrlListarCantidadVecesPrestados iCtrlListarCantidadVecesPrestados = fabrica.getCtrlListarCantidadVecesPrestados();
         
         Dimension desktopSize = frame.getSize();
         Dimension jInternalFrameSize;
@@ -125,6 +128,13 @@ public class Principal {
 		    (desktopSize.height- jInternalFrameSize.height)/2);
 		listarPrestamosPorZonaInternalFrame.setVisible(false);
 		frame.getContentPane().add(listarPrestamosPorZonaInternalFrame);
+
+        listarCantidadVecesPrestadosInternalFrame = new ListarCantidadVecesPrestados(iCtrlListarCantidadVecesPrestados);
+		jInternalFrameSize = listarCantidadVecesPrestadosInternalFrame.getSize();
+		listarCantidadVecesPrestadosInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		listarCantidadVecesPrestadosInternalFrame.setVisible(false);
+		frame.getContentPane().add(listarCantidadVecesPrestadosInternalFrame);
     }
 
     private void initialize() {
@@ -217,5 +227,13 @@ public class Principal {
             }
         });
         mnListados.add(mntmListarPrestamosPorZona);
+
+        JMenuItem mntmListarCantidadVecesPrestados = new JMenuItem("Listar Cantidad Veces Prestados");
+        mntmListarCantidadVecesPrestados.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                listarCantidadVecesPrestadosInternalFrame.setVisible(true);
+            }
+        });
+        mnListados.add(mntmListarCantidadVecesPrestados);
     }
 }
