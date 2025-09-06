@@ -6,6 +6,7 @@ import javax.persistence.Query;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 public class ManejadorMaterial {
     private static ManejadorMaterial instancia = null;
@@ -97,6 +98,28 @@ public class ManejadorMaterial {
         ArrayList<Material> aRetornar = new ArrayList<>();
         for (Material material : listMaterial) {
             aRetornar.add(material);
+        }
+        return aRetornar;
+    }
+
+    public ArrayList<Map.Entry<Integer, Material>> obtenerMaterialesMasPrestados() {
+        Conexion conexion = Conexion.getInstancia();
+        EntityManager em = conexion.getEntityManager();
+
+        // Consulta para contar la cantidad de préstamos por material
+        Query query = em.createQuery(
+            "SELECT m, COUNT(p) as cantidadPrestamos " +
+            "FROM Material m LEFT JOIN Prestamo p ON p.material = m " +
+            "GROUP BY m " +
+            "ORDER BY cantidadPrestamos DESC"
+        );
+        List<Object[]> resultados = (List<Object[]>) query.getResultList();
+
+        ArrayList<Map.Entry<Integer, Material>> aRetornar = new ArrayList<>();
+        for (Object[] fila : resultados) {
+            Material material = (Material) fila[0];
+            Long cantidadPrestamos = (Long) fila[1];
+            aRetornar.add(new java.util.AbstractMap.SimpleEntry<>(cantidadPrestamos.intValue(), material));
         }
         return aRetornar;
     }
