@@ -19,6 +19,7 @@ import interfaces.ICtrlListarPrestamos;
 import interfaces.ICtrlCambiarZonaLector;
 import interfaces.ICtrlSuspenderUsuario;
 import interfaces.ICtrlListarPrestamosBibliotecario;
+import interfaces.ICtrlListarPrestamosPorZona;
 
 public class Principal {
     private JFrame frame;
@@ -31,7 +32,7 @@ public class Principal {
     private CambiarZonaLector cambiarZonaLectorInternalFrame;
     private SuspenderUsuario suspenderUsuarioInternalFrame;
     private ListarPrestamosBibliotecario listarPrestamosBibliotecarioInternalFrame;
-
+    private ListarPrestamosPorZona listarPrestamosPorZonaInternalFrame;
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -57,7 +58,8 @@ public class Principal {
         ICtrlCambiarZonaLector iCtrlCambiarZonaLector = fabrica.getCtrlCambiarZonaLector();
         ICtrlSuspenderUsuario iCtrlSuspenderUsuario = fabrica.getCtrlSuspenderUsuario();
         ICtrlListarPrestamosBibliotecario iCtrlListarPrestamosBibliotecario = fabrica.getCtrlListarPrestamosBibliotecario();
-
+        ICtrlListarPrestamosPorZona iCtrlListarPrestamosPorZona = fabrica.getCtrlListarPrestamosPorZona();
+        
         Dimension desktopSize = frame.getSize();
         Dimension jInternalFrameSize;
 
@@ -116,6 +118,13 @@ public class Principal {
 		    (desktopSize.height- jInternalFrameSize.height)/2);
 		listarPrestamosBibliotecarioInternalFrame.setVisible(false);
 		frame.getContentPane().add(listarPrestamosBibliotecarioInternalFrame);
+
+        listarPrestamosPorZonaInternalFrame = new ListarPrestamosPorZona(iCtrlListarPrestamosPorZona);
+		jInternalFrameSize = listarPrestamosPorZonaInternalFrame.getSize();
+		listarPrestamosPorZonaInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		listarPrestamosPorZonaInternalFrame.setVisible(false);
+		frame.getContentPane().add(listarPrestamosPorZonaInternalFrame);
     }
 
     private void initialize() {
@@ -200,5 +209,13 @@ public class Principal {
             }
         });
         mnListados.add(mntmListarPrestamosBibliotecario);
+
+        JMenuItem mntmListarPrestamosPorZona = new JMenuItem("Listar Prestamos (Por Zona)");
+        mntmListarPrestamosPorZona.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                listarPrestamosPorZonaInternalFrame.setVisible(true);
+            }
+        });
+        mnListados.add(mntmListarPrestamosPorZona);
     }
 }

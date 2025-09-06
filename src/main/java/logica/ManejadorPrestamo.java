@@ -6,6 +6,7 @@ import javax.persistence.Query;
 import java.util.List;
 import java.util.ArrayList;
 import datatypes.DtPrestamo;
+import datatypes.Zona;
 
 public class ManejadorPrestamo {
     private static ManejadorPrestamo instancia = null;
@@ -24,9 +25,16 @@ public class ManejadorPrestamo {
     public void altaPrestamo(Prestamo prestamo) {
         Conexion conexion = Conexion.getInstancia();
         EntityManager em = conexion.getEntityManager();
-        em.getTransaction().begin();
-        em.persist(prestamo);
-        em.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            em.persist(prestamo);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw e;
+        }
     }
 
     public Prestamo buscarPrestamo(String idMaterial) {
@@ -50,6 +58,21 @@ public class ManejadorPrestamo {
         Query query = em.createQuery("SELECT p FROM Prestamo p");
         List<Prestamo> prestamos = query.getResultList();
         
+        ArrayList<Prestamo> aRetornar = new ArrayList<>();
+        for (Prestamo prestamo : prestamos) {
+            aRetornar.add(prestamo);
+        }
+        return aRetornar;
+    }
+
+    public ArrayList<Prestamo> obtenerPrestamosPorZona(Zona zona) {
+        Conexion conexion = Conexion.getInstancia();
+        EntityManager em = conexion.getEntityManager();
+        
+        Query query = em.createQuery("SELECT p FROM Prestamo p WHERE p.lector.zona = :zona");
+        query.setParameter("zona", zona);
+        List<Prestamo> prestamos = query.getResultList();
+
         ArrayList<Prestamo> aRetornar = new ArrayList<>();
         for (Prestamo prestamo : prestamos) {
             aRetornar.add(prestamo);
