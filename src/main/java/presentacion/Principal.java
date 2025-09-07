@@ -21,6 +21,13 @@ import interfaces.ICtrlSuspenderUsuario;
 import interfaces.ICtrlListarPrestamosBibliotecario;
 import interfaces.ICtrlListarPrestamosPorZona;
 import interfaces.ICtrlListarCantidadVecesPrestados;
+import interfaces.ICtrlModPrestamo;
+import interfaces.ICtrlListarPrestActXLector;
+import presentacion.AgregarPrestamo;
+import presentacion.ListarPrestamos;
+import presentacion.CambiarEstadoPrestamo;
+import presentacion.ModPrestamo;
+import presentacion.ListarPrestamosActivosLector;
 
 public class Principal {
     private JFrame frame;
@@ -35,6 +42,10 @@ public class Principal {
     private ListarPrestamosBibliotecario listarPrestamosBibliotecarioInternalFrame;
     private ListarPrestamosPorZona listarPrestamosPorZonaInternalFrame;
     private ListarCantidadVecesPrestados listarCantidadVecesPrestadosInternalFrame;
+    private CambiarEstadoPrestamo cambiarEstadoPrestamoInternalFrame;
+    private ModPrestamo modPrestamoInternalFrame;
+    private ListarPrestamosActivosLector listarPrestamosActivosLectorInternalFrame;
+
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -63,6 +74,9 @@ public class Principal {
         ICtrlListarPrestamosPorZona iCtrlListarPrestamosPorZona = fabrica.getCtrlListarPrestamosPorZona();
         ICtrlListarCantidadVecesPrestados iCtrlListarCantidadVecesPrestados = fabrica.getCtrlListarCantidadVecesPrestados();
         
+        ICtrlModPrestamo iCtrlModPrestamo = fabrica.getCtrlModPrestamo();
+        ICtrlListarPrestActXLector iCtrlListarPrestActXLector = fabrica.getCtrlListarPrestActXLector();
+
         Dimension desktopSize = frame.getSize();
         Dimension jInternalFrameSize;
 
@@ -135,6 +149,21 @@ public class Principal {
 		    (desktopSize.height- jInternalFrameSize.height)/2);
 		listarCantidadVecesPrestadosInternalFrame.setVisible(false);
 		frame.getContentPane().add(listarCantidadVecesPrestadosInternalFrame);
+        cambiarEstadoPrestamoInternalFrame = new CambiarEstadoPrestamo(iCtrlModPrestamo);
+		jInternalFrameSize = cambiarEstadoPrestamoInternalFrame.getSize();
+		cambiarEstadoPrestamoInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		cambiarEstadoPrestamoInternalFrame.setVisible(false);
+		frame.getContentPane().add(cambiarEstadoPrestamoInternalFrame);
+
+        modPrestamoInternalFrame = new ModPrestamo(iCtrlModPrestamo);
+
+        listarPrestamosActivosLectorInternalFrame = new ListarPrestamosActivosLector(iCtrlListarPrestActXLector);
+		jInternalFrameSize = listarPrestamosActivosLectorInternalFrame.getSize();
+		listarPrestamosActivosLectorInternalFrame.setLocation((desktopSize.width - jInternalFrameSize.width)/2,
+		    (desktopSize.height- jInternalFrameSize.height)/2);
+		listarPrestamosActivosLectorInternalFrame.setVisible(false);
+		frame.getContentPane().add(listarPrestamosActivosLectorInternalFrame);
     }
 
     private void initialize() {
@@ -192,6 +221,22 @@ public class Principal {
         });
         mnModificaciones.add(mntmSuspenderUsuario);
 
+        JMenuItem mntmCambiarEstadoPrestamo = new JMenuItem("Cambiar estado de prestamo");
+        mntmCambiarEstadoPrestamo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cambiarEstadoPrestamoInternalFrame.setVisible(true);
+            }
+        });
+        mnModificaciones.add(mntmCambiarEstadoPrestamo);
+
+        JMenuItem mntmActualizarPrestamo = new JMenuItem("Actualizar Préstamo");
+        mntmActualizarPrestamo.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                modPrestamoInternalFrame.setVisible(true);
+            }
+        });
+        mnModificaciones.add(mntmActualizarPrestamo);
+
 
         JMenu mnListados = new JMenu("Listados");
         menuBar.add(mnListados);
@@ -235,5 +280,12 @@ public class Principal {
             }
         });
         mnListados.add(mntmListarCantidadVecesPrestados);
+        JMenuItem mntmListarPrestamosActivosLector = new JMenuItem("Listar Prestamos Activos de un Lector");
+        mntmListarPrestamosActivosLector.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                listarPrestamosActivosLectorInternalFrame.setVisible(true);
+            }
+        });
+        mnListados.add(mntmListarPrestamosActivosLector);
     }
 }

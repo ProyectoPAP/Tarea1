@@ -45,4 +45,16 @@ public class DtPrestamo {
         return "DtPrestamo [material=" + material + ", lector=" + lector + ", bibliotecario=" + bibliotecario + ", material=" + material + ", fechaPrestamo=" + fechaPrestamo + ", fechaDevolucion=" + fechaDevolucion + ", estado=" + estado + "]";
     }
 
+    public void setEstado(EstadoPrestamo estado) {
+        this.estado = estado;
+    }
+
+    public void setFechaPrestamo(Date fechaPrestamo) {
+        this.fechaPrestamo = fechaPrestamo;
+    }
+
+    public void setFechaDevolucion(Date fechaDevolucion) {
+        this.fechaDevolucion = fechaDevolucion;
+    }
+
 }

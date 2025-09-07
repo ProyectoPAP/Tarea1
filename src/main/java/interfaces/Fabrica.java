@@ -16,6 +16,8 @@ import logica.CtrlSuspenderUsuario;
 import logica.CtrlListarPrestamosBibliotecario;
 import logica.CtrlListarPrestamosPorZona;
 import logica.CtrlListarCantidadVecesPrestados;
+import logica.CtrlModPrestamo;
+import logica.CtrlListarPrestActXLector;
 
 public class Fabrica {
     private static Fabrica instancia = null;
@@ -69,5 +71,13 @@ public class Fabrica {
 
     public ICtrlListarCantidadVecesPrestados getCtrlListarCantidadVecesPrestados() {
         return new CtrlListarCantidadVecesPrestados();
+    }
+
+    public ICtrlModPrestamo getCtrlModPrestamo() {
+        return new CtrlModPrestamo();
+    }
+
+    public ICtrlListarPrestActXLector getCtrlListarPrestActXLector() {
+        return new CtrlListarPrestActXLector();
     }
 }
