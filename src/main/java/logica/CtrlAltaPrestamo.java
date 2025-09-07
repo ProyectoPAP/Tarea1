@@ -34,6 +34,14 @@ public class CtrlAltaPrestamo implements ICtrlAltaPrestamo {
             throw new RuntimeException("El material no existe");
         }
         
+        // Verificar si ya existe un préstamo con la misma clave compuesta
+        ManejadorPrestamo mP = ManejadorPrestamo.getInstancia();
+        Prestamo prestamoExistente = mP.buscarPrestamoPorParametros(emailLector, emailBibliotecario, idMaterial);
+        if (prestamoExistente != null) {
+            throw new RuntimeException("Ya existe un préstamo con estos parámetros (lector: " + emailLector + 
+                                     ", bibliotecario: " + emailBibliotecario + ", material: " + idMaterial + ")");
+        }
+        
         // Crear el préstamo
         Date fechaPrestamo = new Date();
         Date fechaDevolucion = null; // Se establecerá cuando se devuelva
@@ -43,7 +51,6 @@ public class CtrlAltaPrestamo implements ICtrlAltaPrestamo {
                                         material, fechaPrestamo, fechaDevolucion, estado);
         
         // Persistir el préstamo
-        ManejadorPrestamo mP = ManejadorPrestamo.getInstancia();
         mP.altaPrestamo(prestamo);
     }
 }
